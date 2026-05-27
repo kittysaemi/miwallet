@@ -140,7 +140,7 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
 .toggle::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;
   background:#fff;border-radius:50%;transition:transform .2s;}
 .toggle.on::after{transform:translateX(18px);}
-.fab{position:fixed;bottom:88px;right:calc(50% - 220px);width:52px;height:52px;
+.fab{position:fixed;bottom:88px;right:16px;width:52px;height:52px;
   background:linear-gradient(135deg,var(--pink),#e44986);border:none;border-radius:50%;
   display:flex;align-items:center;justify-content:center;cursor:pointer;
   box-shadow:0 6px 18px rgba(228,73,134,.4);z-index:99;color:#fff;font-size:28px;line-height:1;}
@@ -168,6 +168,23 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
 .detail-row:last-child{border-bottom:none;}
 .detail-row .dlabel{font-size:12px;color:var(--muted);}
 .detail-row .dvalue{font-size:14px;font-weight:700;color:var(--text);}
+/* ── 데이터 관리 드롭다운 ── */
+.data-menu-wrap{position:relative;z-index:50;}
+.data-menu-wrap>button{background:#fff;border:1px solid var(--line);border-radius:10px;
+  padding:6px 10px;cursor:pointer;font-size:12px;color:var(--muted);
+  display:flex;align-items:center;gap:4px;font-weight:600;}
+.data-menu-wrap>button svg{width:14px;height:14px;stroke:var(--muted);}
+.data-dropdown{position:absolute;right:0;top:calc(100% + 6px);background:#fff;
+  border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 8px 24px rgba(71,49,58,.18);min-width:148px;
+  overflow:hidden;display:none;z-index:300;}
+.data-dropdown.open{display:block;}
+.data-dropdown .dd-item{padding:13px 16px;font-size:13px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;gap:10px;color:var(--text);transition:background .12s;}
+.data-dropdown .dd-item:active{background:var(--pink2);}
+.data-dropdown .dd-item+.dd-item{border-top:1px solid var(--line);}
+.data-dropdown .dd-item.danger{color:var(--danger);}
+.data-dropdown .dd-item svg{width:15px;height:15px;flex-shrink:0;stroke:currentColor;}
 </style>
 </head>
 <body>
@@ -193,9 +210,32 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
   <header class="app-header">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <div><h1>미냥이지갑 🐱</h1><p id="home-greeting"></p></div>
-      <div style="font-size:11px;color:var(--muted);" id="home-today"></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-size:11px;color:var(--muted);" id="home-today"></div>
+        <div class="data-menu-wrap" id="data-menu-wrap">
+          <button onclick="DataMgr.toggle(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            데이터
+          </button>
+          <div class="data-dropdown" id="data-dropdown">
+            <div class="dd-item danger" onclick="DataMgr.reset()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              데이터 초기화
+            </div>
+            <div class="dd-item" onclick="DataMgr.importData()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              불러오기
+            </div>
+            <div class="dd-item" onclick="DataMgr.exportData()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              내보내기
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
+  <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="DataMgr.onFileSelected(event)"/>
   <div class="content">
     <div id="balance-card" class="balance-card">
       <div class="nickname" id="home-nickname"></div>
@@ -499,6 +539,85 @@ function iconSVG(name,size=18){
   return`<i data-lucide="${name}" style="width:${size}px;height:${size}px;display:block;"></i>`;
 }
 function ri(){if(window.lucide)lucide.createIcons();}
+
+// ── 데이터 관리 ──
+const DataMgr={
+  toggle(e){
+    e.stopPropagation();
+    const dd=document.getElementById('data-dropdown');
+    dd.classList.toggle('open');
+  },
+  close(){
+    document.getElementById('data-dropdown').classList.remove('open');
+  },
+  exportData(){
+    this.close();
+    const data={
+      version:1,
+      exported_at:new Date().toISOString(),
+      nickname:DB.getStr('nickname'),
+      accounts:DB.get('accounts'),
+      cards:DB.get('cards'),
+      categories:DB.get('categories'),
+      icons:DB.get('icons'),
+      transactions:DB.get('transactions')
+    };
+    const json=JSON.stringify(data,null,2);
+    const blob=new Blob([json],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const date=new Date().toISOString().slice(0,10).replace(/-/g,'');
+    a.href=url;
+    a.download='미냥이지갑_'+date+'.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('📤 내보내기 완료! 파일을 구글 드라이브에 저장하세요.');
+  },
+  importData(){
+    this.close();
+    document.getElementById('import-file-input').value='';
+    document.getElementById('import-file-input').click();
+  },
+  onFileSelected(e){
+    const file=e.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        if(!data.version||!data.accounts||!data.transactions)
+          throw new Error('형식 오류');
+        if(!confirm('현재 데이터를 불러온 데이터로 교체합니다.\n계속하시겠어요?'))return;
+        if(data.nickname)DB.setStr('nickname',data.nickname);
+        if(data.accounts)DB.set('accounts',data.accounts);
+        if(data.cards)DB.set('cards',data.cards);
+        if(data.categories)DB.set('categories',data.categories);
+        if(data.icons)DB.set('icons',data.icons);
+        if(data.transactions)DB.set('transactions',data.transactions);
+        DB.setStr('init','1');
+        toast('📥 불러오기 완료!');
+        Home.render();ri();
+      }catch(err){
+        alert('올바른 미냥이지갑 백업 파일이 아닙니다.');
+      }
+    };
+    reader.readAsText(file);
+  },
+  reset(){
+    this.close();
+    if(!confirm('모든 데이터가 삭제되고 초기화됩니다.\n정말 초기화하시겠어요?'))return;
+    ['nickname','accounts','cards','categories','icons','transactions','init']
+      .forEach(k=>localStorage.removeItem('miwallet_'+k));
+    initData();
+    DB.setStr('init','1');
+    toast('🗑️ 초기화 완료');
+    Home.render();ri();
+  }
+};
+// 드롭다운 외부 클릭 닫기
+document.addEventListener('click',()=>DataMgr.close());
 
 // ── App ──
 const App={
