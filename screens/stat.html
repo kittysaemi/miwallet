@@ -1,0 +1,21 @@
+﻿<meta charset="UTF-8">
+<div id="screen-stat" class="screen">
+  <header class="app-header"><h1>소비 분석</h1></header>
+  <div class="content">
+    <div class="month-picker">
+      <button onclick="Stat.prevMonth()">‹</button>
+      <div class="cur-month" id="stat-month-label"></div>
+      <button onclick="Stat.nextMonth()">›</button>
+    </div>
+    <div class="summary-grid" style="margin-bottom:12px;">
+      <div class="summary-item income"><div class="label">수입</div><div class="value" id="stat-income">₩0</div></div>
+      <div class="summary-item expense"><div class="label">지출+카드</div><div class="value" id="stat-expense">₩0</div></div>
+    </div>
+    <div class="chart-wrap"><div class="chart-title">최근 6개월 지출</div><div class="chart-box chart-box-bar"><canvas id="chart-bar"></canvas></div></div>
+    <div class="chart-wrap">
+      <div class="chart-title">카테고리별 지출</div>
+      <div class="chart-box chart-box-donut"><canvas id="chart-donut"></canvas></div>
+      <div id="chart-legend" style="margin-top:10px;"></div>
+    </div>
+  </div>
+</div>

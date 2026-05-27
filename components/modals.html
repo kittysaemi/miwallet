@@ -1,0 +1,111 @@
+﻿<meta charset="UTF-8">
+<div id="modal-detail" class="modal-overlay" onclick="if(event.target===this)App.closeModal('modal-detail')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>거래 상세</h3>
+    <div id="detail-content"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="Detail.edit()">수정</button>
+      <button class="btn btn-danger" onclick="Detail.delete()">삭제</button>
+      <button class="btn btn-ghost" onclick="App.closeModal('modal-detail')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 모달: 계좌 -->
+<div id="modal-account" class="modal-overlay" onclick="if(event.target===this)App.closeModal('modal-account')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="modal-account-title">계좌 등록</h3>
+    <div class="form-group"><label>계좌명</label><input id="acc-name" class="form-control" placeholder="계좌명 입력" maxlength="20"/></div>
+    <div class="form-group"><label>초기 잔액 (현재 잔액)</label><input id="acc-balance" class="form-control" type="number" placeholder="0" min="0"/></div>
+    <div class="form-group"><label>아이콘 선택</label><div class="icon-grid" id="acc-icon-grid"></div></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('modal-account')">취소</button>
+      <button class="btn btn-primary" onclick="Manage.saveAccount()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 모달: 카드 -->
+<div id="modal-card" class="modal-overlay" onclick="if(event.target===this)App.closeModal('modal-card')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="modal-card-title">카드 등록</h3>
+    <div class="form-group"><label>카드명</label><input id="card-name" class="form-control" placeholder="카드명 입력" maxlength="20"/></div>
+    <div class="form-group"><label>아이콘 선택</label><div class="icon-grid" id="card-icon-grid"></div></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('modal-card')">취소</button>
+      <button class="btn btn-primary" onclick="Manage.saveCard()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 모달: 카테고리 -->
+<div id="modal-category" class="modal-overlay" onclick="if(event.target===this)App.closeModal('modal-category')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="modal-cat-title">카테고리 등록</h3>
+    <div class="form-group"><label>카테고리명</label><input id="cat-name" class="form-control" placeholder="카테고리명 입력" maxlength="15"/></div>
+    <div class="form-group"><label>아이콘 선택</label><div class="icon-grid" id="cat-icon-grid"></div></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('modal-category')">취소</button>
+      <button class="btn btn-primary" onclick="Manage.saveCategory()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 모달: 아이콘 등록 -->
+<div id="modal-icon" class="modal-overlay" onclick="if(event.target===this)App.closeModal('modal-icon')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>아이콘 등록</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+      <a href="https://lucide.dev/icons/" target="_blank" style="color:var(--deep);">Lucide Icons 목록 보기</a>에서 이름을 복사해서 입력하세요.
+    </p>
+    <div class="form-group">
+      <label>Lucide 아이콘 이름</label>
+      <input id="icon-value" class="form-control" placeholder="예: wallet, heart, coffee" oninput="Manage.previewIcon()"/>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);">
+        <span>미리보기:</span>
+        <span id="icon-preview-el" style="display:inline-flex;align-items:center;background:var(--pink2);padding:8px;border-radius:10px;color:var(--deep);min-width:36px;min-height:36px;justify-content:center;"></span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('modal-icon')">취소</button>
+      <button class="btn btn-primary" onclick="Manage.saveIcon()">등록</button>
+    </div>
+  </div>
+</div>
+
+<!-- 모달: 내역 수정 -->
+<div id="modal-edit" class="modal-overlay" onclick="if(event.target===this)App.closeModal('modal-edit')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>내역 수정</h3>
+    <div class="type-tabs" style="margin-bottom:16px;">
+      <div class="type-tab income" data-etype="income" onclick="Edit.setType('income')">수입</div>
+      <div class="type-tab expense" data-etype="expense" onclick="Edit.setType('expense')">지출</div>
+      <div class="type-tab card" data-etype="card" onclick="Edit.setType('card')">카드</div>
+    </div>
+    <div class="form-group"><label>금액</label><input id="edit-amount" class="form-control" type="number" min="1"/></div>
+    <div class="form-group"><label>카테고리</label>
+      <div class="select-with-icon">
+        <div class="select-icon-preview" id="edit-category-icon"></div>
+        <select id="edit-category" class="form-control" onchange="Edit.updateSelectIcons()"></select>
+      </div>
+    </div>
+    <div class="form-group"><label id="edit-wallet-label">계좌</label>
+      <div class="select-with-icon">
+        <div class="select-icon-preview" id="edit-wallet-icon"></div>
+        <select id="edit-wallet" class="form-control" onchange="Edit.updateSelectIcons()"></select>
+      </div>
+    </div>
+    <div class="form-group"><label>날짜</label><input id="edit-date" class="form-control" type="date"/></div>
+    <div class="form-group"><label>메모</label><input id="edit-memo" class="form-control"/></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="App.closeModal('modal-edit')">취소</button>
+      <button class="btn btn-primary" onclick="Edit.save()">저장</button>
+    </div>
+  </div>
+</div>

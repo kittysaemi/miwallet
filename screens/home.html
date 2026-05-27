@@ -1,0 +1,50 @@
+﻿<meta charset="UTF-8">
+<div id="screen-home" class="screen">
+  <header class="app-header">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div><h1>미냥이지갑 🐱</h1><p id="home-greeting"></p></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-size:11px;color:var(--muted);" id="home-today"></div>
+        <div class="data-menu-wrap" id="data-menu-wrap">
+          <button onclick="DataMgr.toggle(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          </button>
+          <div class="data-dropdown" id="data-dropdown">
+            <div class="dd-item danger" onclick="DataMgr.reset()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              데이터 초기화
+            </div>
+            <div class="dd-item" onclick="DataMgr.repairKoreanDefaults()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3v18"/><path d="M17 8H9.5a3.5 3.5 0 0 0 0 7H15a3 3 0 0 1 0 6H6"/></svg>
+              한글 기본값 복구
+            </div>
+            <div class="dd-item" onclick="DataMgr.importData()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              불러오기
+            </div>
+            <div class="dd-item" onclick="DataMgr.exportData()">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              내보내기
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="DataMgr.onFileSelected(event)"/>
+  <div class="content">
+    <div id="balance-card" class="balance-card">
+      <div class="nickname" id="home-nickname"></div>
+      <div class="label">현재 총 잔액</div>
+      <div class="amount" id="home-balance">₩0</div>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-item income"><div class="label">이번 달 수입</div><div class="value" id="home-income">₩0</div></div>
+      <div class="summary-item expense"><div class="label">이번 달 지출</div><div class="value" id="home-expense">₩0</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title">최근 내역 <a onclick="App.navigate('search')">더보기</a></div>
+      <div id="home-tx-list"><div class="empty-state"><p>아직 내역이 없어요 🐱</p></div></div>
+    </div>
+  </div>
+</div>

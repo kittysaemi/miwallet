@@ -1,0 +1,16 @@
+﻿<meta charset="UTF-8">
+<div id="screen-manage" class="screen">
+  <header class="app-header"><h1>관리</h1></header>
+  <div class="content">
+    <div class="manage-tab-bar">
+      <div class="mtab active" id="mtab-account" onclick="Manage.setTab('account')">계좌</div>
+      <div class="mtab" id="mtab-card" onclick="Manage.setTab('card')">카드</div>
+      <div class="mtab" id="mtab-category" onclick="Manage.setTab('category')">카테고리</div>
+      <div class="mtab" id="mtab-icon" onclick="Manage.setTab('icon')">아이콘</div>
+    </div>
+    <div id="manage-content"></div>
+  </div>
+  <button class="fab manage-add-fab" id="manage-fab" onclick="Manage.openAdd()" aria-label="항목 추가">
+    <i data-lucide="plus-square"></i>
+  </button>
+</div>
