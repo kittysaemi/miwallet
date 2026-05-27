@@ -7,11 +7,9 @@
       <div class="type-tab expense" data-type="expense" onclick="Add.setType('expense')">지출</div>
       <div class="type-tab card" data-type="card" onclick="Add.setType('card')">카드</div>
     </div>
-    <div class="amount-display">
-      <div><span class="unit">₩</span> <span class="amount-num" id="add-amount-display">0</span></div>
+    <div class="amount-display amount-input-wrap">
+      <input id="add-amount" class="amount-input" inputmode="numeric" autocomplete="off" placeholder="₩0" oninput="Add.updateAmountDisplay()"/>
     </div>
-    <div class="form-group"><label>금액</label>
-      <input id="add-amount" class="form-control" type="number" min="1" placeholder="금액 입력" oninput="Add.updateAmountDisplay()"/></div>
     <div class="form-group"><label>카테고리</label>
       <select id="add-category" class="form-control native-select-hidden"></select>
       <div id="add-category-picker" class="icon-select"></div>

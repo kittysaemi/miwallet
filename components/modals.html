@@ -18,7 +18,7 @@
     <div class="modal-handle"></div>
     <h3 id="modal-account-title">계좌 등록</h3>
     <div class="form-group"><label>계좌명</label><input id="acc-name" class="form-control" placeholder="계좌명 입력" maxlength="20"/></div>
-    <div class="form-group"><label>초기 잔액 (현재 잔액)</label><input id="acc-balance" class="form-control" type="number" placeholder="0" min="0"/></div>
+    <div class="form-group"><label>초기 잔액 (현재 잔액)</label><input id="acc-balance" class="form-control money-input" inputmode="numeric" autocomplete="off" placeholder="₩0" oninput="formatMoneyField(this)"/></div>
     <div class="form-group"><label>아이콘 선택</label><div class="icon-grid" id="acc-icon-grid"></div></div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="App.closeModal('modal-account')">취소</button>

@@ -74,6 +74,16 @@ function setIconPreview(id,name,size=20){
 function escHTML(v){
   return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
+function parseMoney(v){
+  return Number(String(v||'').replace(/[^\d]/g,''))||0;
+}
+function formatMoney(n){
+  const amount=parseMoney(n);
+  return amount?'₩'+amount.toLocaleString('ko-KR'):'';
+}
+function formatMoneyField(el){
+  el.value=formatMoney(el.value);
+}
 
 // ── 데이터 관리 ──
 const DataMgr={
@@ -270,7 +280,6 @@ const Add={
       if(el.dataset.type==='income')el.classList.add('active');
     });
     document.getElementById('add-amount').value='';
-    document.getElementById('add-amount-display').textContent='0';
     document.getElementById('add-memo').value='';
     document.getElementById('add-date').value=U.today();
     document.getElementById('add-date').max=U.today();
@@ -364,11 +373,10 @@ const Add={
     }
   },
   updateAmountDisplay(){
-    const v=document.getElementById('add-amount').value;
-    document.getElementById('add-amount-display').textContent=v?Number(v).toLocaleString('ko-KR'):'0';
+    formatMoneyField(document.getElementById('add-amount'));
   },
   save(){
-    const amount=Number(document.getElementById('add-amount').value);
+    const amount=parseMoney(document.getElementById('add-amount').value);
     const cat=document.getElementById('add-category').value;
     const wallet=document.getElementById('add-wallet').value;
     const date=document.getElementById('add-date').value;
@@ -602,12 +610,12 @@ const Manage={
     const a=DB.get('accounts').find(x=>x.wallet_id===id);if(!a)return;
     document.getElementById('modal-account-title').textContent='계좌 수정';
     document.getElementById('acc-name').value=a.account_name;
-    document.getElementById('acc-balance').value=a.current_balance;
+    document.getElementById('acc-balance').value=formatMoney(a.current_balance);
     this.loadIconGrid('acc-icon-grid',a.icon_id);App.openModal('modal-account');
   },
   saveAccount(){
     const name=document.getElementById('acc-name').value.trim();
-    const balance=Number(document.getElementById('acc-balance').value)||0;
+    const balance=parseMoney(document.getElementById('acc-balance').value);
     if(!name){toast('계좌명을 입력해 주세요!');return;}
     if(!this.selIcon){toast('아이콘을 선택해 주세요!');return;}
     const list=DB.get('accounts');

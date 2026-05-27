@@ -105,6 +105,11 @@ select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3C
   padding:20px;text-align:center;margin-bottom:16px;}
 .amount-display .amount-num{font-size:36px;font-weight:900;color:var(--deep);letter-spacing:-.05em;}
 .amount-display .unit{font-size:16px;color:var(--muted);}
+.amount-input-wrap{padding:14px 16px;}
+.amount-input{width:100%;border:0;background:transparent;outline:none;text-align:center;
+  font-size:36px;font-weight:900;color:var(--deep);letter-spacing:0;}
+.amount-input::placeholder{color:var(--muted);opacity:.55;}
+.money-input{text-align:right;font-weight:800;}
 .select-with-icon{display:flex;align-items:center;gap:10px;}
 .select-with-icon .select-icon-preview{width:42px;height:42px;border-radius:50%;background:var(--pink2);
   color:var(--deep);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
