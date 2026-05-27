@@ -1,0 +1,30 @@
+﻿<meta charset="UTF-8">
+<div id="screen-add" class="screen">
+  <header class="app-header"><h1>내역 등록</h1></header>
+  <div class="content">
+    <div class="type-tabs">
+      <div class="type-tab active income" data-type="income" onclick="Add.setType('income')">수입</div>
+      <div class="type-tab expense" data-type="expense" onclick="Add.setType('expense')">지출</div>
+      <div class="type-tab card" data-type="card" onclick="Add.setType('card')">카드</div>
+    </div>
+    <div class="amount-display">
+      <div><span class="unit">₩</span> <span class="amount-num" id="add-amount-display">0</span></div>
+    </div>
+    <div class="form-group"><label>금액</label>
+      <input id="add-amount" class="form-control" type="number" min="1" placeholder="금액 입력" oninput="Add.updateAmountDisplay()"/></div>
+    <div class="form-group"><label>카테고리</label>
+      <select id="add-category" class="form-control native-select-hidden"></select>
+      <div id="add-category-picker" class="icon-select"></div>
+    </div>
+    <div class="form-group" id="add-wallet-group">
+      <label id="add-wallet-label">계좌</label>
+      <select id="add-wallet" class="form-control native-select-hidden"></select>
+      <div id="add-wallet-picker" class="icon-select"></div>
+    </div>
+    <div class="form-group"><label>날짜</label>
+      <input id="add-date" class="form-control" type="date"/></div>
+    <div class="form-group"><label>메모 (선택)</label>
+      <input id="add-memo" class="form-control" placeholder="메모 입력"/></div>
+    <button class="btn btn-primary btn-full" onclick="Add.save()">저장</button>
+  </div>
+</div>
